@@ -1,5 +1,7 @@
 <?php
 return [
+    'language' => 'ru-RU',
+    'sourceLanguage' => 'en-US',
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
@@ -26,6 +28,17 @@ return [
                         'html' => ['class' => '\yii\helpers\Html'],
                     ],
                     'uses' => ['yii\bootstrap'],
+                    'functions' => array(
+                        't' => 'Yii::t',
+                    ),
+                ],
+            ],
+        ],
+        'i18n' => [
+            'translations' => [
+                'app*'=> [
+                    'class' => 'yii\i18n\PhpMessageSource',
+                    'basePath' => '@common/messages',
                 ],
             ],
         ],
