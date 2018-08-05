@@ -1,0 +1,19 @@
+{% extends '/admin/layout/base.twig' %}
+{% block content %}
+
+        <div class="col-lg-5">
+            {{ use('yii/widgets/ActiveForm') }}
+
+            {% set form = active_form_begin({
+            'id': 'form-signup',
+            'options': { 'class': 'form-horizontal', }
+            }) %}
+            {{ form.field(model, 'email').label('E-mail') | raw }}
+            {{ form.field(model, 'username').textInput({'class' : 'form-control'}).label(model.labelUsername) | raw }}
+            {{ form.field(model, 'password').passwordInput().label(model.labelPassword) | raw }}
+                <div class="">
+                    {{ html.submitButton(model.addButton, { 'class': 'btn btn-primary' }) | raw }}
+                </div>
+            {{ active_form_end() }}
+        </div>
+{% endblock %}

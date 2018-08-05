@@ -1,3 +1,7 @@
 .menu-active {
     display: block;
 }
+
+a.active {
+    font-weight: bold;
+}

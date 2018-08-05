@@ -57,11 +57,9 @@ class AdminController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index.twig');
-    }
-
-    public function actionUsers()
-    {
-        return $this->render('users/list');
+        $breadcrumbs[] = ['label' => 'Админ панель', 'url' => ['/admin'], 'class' => 'active'];
+        return $this->render('index.twig', [
+            'breadcrumbs' => $breadcrumbs,
+        ]);
     }
 }
