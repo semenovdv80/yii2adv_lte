@@ -30,21 +30,20 @@
                 </div>
                 <div class="row">
                     <div class="col-sm-12">
-                        <table id="example1" class="table table-bordered table-striped dataTable" role="grid"
+                        <table id="itemsTable" class="table table-bordered table-striped dataTable" role="grid"
                                aria-describedby="example1_info">
                             <thead>
                             <tr role="row">
-                                <th class="sorting_asc" tabindex="0" aria-controls="example1" rowspan="1" colspan="1"
-                                    aria-sort="ascending"
-                                    aria-label="Rendering engine: activate to sort column descending">
-                                    Id
+                                <th class="order_{{ app.view.params['orderCol']=='id' ? app.view.params['orderType'] : '' }}"
+                                    data-col="id">
+                                    ID
                                 </th>
-                                <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1"
-                                    aria-label="Browser: activate to sort column ascending">
+                                <th class="order_{{ app.view.params['orderCol']=='email' ? app.view.params['orderType'] : '' }}"
+                                    data-col="email">
                                     E-mail
                                 </th>
-                                <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1"
-                                    aria-label="Platform(s): activate to sort column ascending">
+                                <th class="order_{{ app.view.params['orderCol']=='username' ? app.view.params['orderType'] : '' }}"
+                                    data-col="username">
                                     Username
                                 </th>
                                 <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1"

@@ -8,6 +8,7 @@ use yii\behaviors\TimestampBehavior;
 use yii\data\Pagination;
 use yii\db\ActiveRecord;
 use yii\db\Query;
+use yii\db\TableSchema;
 use yii\helpers\VarDumper;
 use yii\web\IdentityInterface;
 
@@ -198,6 +199,8 @@ class User extends ActiveRecord implements IdentityInterface
     public static function getList()
     {
         $request = Yii::$app->request->get();
+        $orderCol = Yii::$app->view->params['orderCol'] = self::orderColumn();
+        $orderType = Yii::$app->view->params['orderType'] = $_COOKIE['orderType'] ?? 'desc';
 
         $query = self::find();
 
@@ -217,8 +220,18 @@ class User extends ActiveRecord implements IdentityInterface
                 ->orWhere(['like', 'username', $request['q']]);
         }
 
+        $query->orderBy("$orderCol $orderType");
+
         $records  = PaginateHelper::paginate($query, $request);
 
         return $records;
+    }
+
+    public static function orderColumn()
+    {
+        $aColumns = self::attributes();
+        $orderCol = $_COOKIE['orderCol'] ?? 'id';
+        $orderCol = in_array($orderCol, $aColumns) ? $orderCol : 'id';
+        return $orderCol;
     }
 }

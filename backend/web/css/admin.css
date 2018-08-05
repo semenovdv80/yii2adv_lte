@@ -5,3 +5,16 @@
 a.active {
     font-weight: bold;
 }
+
+/* Order by signs */
+.order_asc:after{
+    color: #0a6aa1;
+    font-family: 'Glyphicons Halflings';
+    content: "\e155";
+}
+
+.order_desc:after{
+    color: #0a6aa1;
+    font-family: 'Glyphicons Halflings';
+    content: "\e156";
+}
