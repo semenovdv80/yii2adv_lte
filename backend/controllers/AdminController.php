@@ -57,7 +57,10 @@ class AdminController extends Controller
      */
     public function actionIndex()
     {
-        $breadcrumbs[] = ['label' => 'Админ панель', 'url' => ['/admin'], 'class' => 'active'];
+        $pageTitle = Yii::t('app', 'Admin panel');
+
+        $breadcrumbs[] = ['label' => $pageTitle, 'url' => ['/admin'], 'class' => 'active'];
+        
         return $this->render('index.twig', [
             'breadcrumbs' => $breadcrumbs,
         ]);

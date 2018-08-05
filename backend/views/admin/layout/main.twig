@@ -74,14 +74,14 @@
             </div>
             <!-- /.navbar-collapse -->
             <!-- Navbar Right Menu -->
-            {% include '/admin/layout/right_menu.twig' %}
+            {% include '/admin/layout/menu_right.twig' %}
         </nav>
     </header>
 
     <!-- =============================================== -->
 
     <!-- Left side column. contains the sidebar -->
-    {% include '/admin/layout/left_sidebar.twig' %}
+    {% include '/admin/layout/sidebar_left.twig' %}
 
     <!-- =============================================== -->
 
@@ -90,7 +90,7 @@
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1>
-                Admin Panel
+                {{ app.view.params.pageTitle }}
             </h1>
             {{ use('yii/widgets') }}
 
@@ -118,7 +118,7 @@
     </footer>
 
     <!-- Control Sidebar -->
-    {% include '/admin/layout/right_sidebar.twig' %}
+    {% include '/admin/layout/sidebar_right.twig' %}
 
     <!-- /.control-sidebar -->
     <!-- Add the sidebar's background. This div must be placed
