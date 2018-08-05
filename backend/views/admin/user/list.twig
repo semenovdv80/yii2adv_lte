@@ -1,14 +1,14 @@
 {% extends '/admin/layout/main.twig' %}
 {% block content %}
-    <div class="box">
+    <div class="box box-primary">
         <!-- /.box-header -->
         <div class="box-body">
             <div id="example1_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
                 <div class="row">
                     <form>
-                    <div class="col-sm-6">
+                    <div class="col-md-6 col-sm-6">
                         <div class="dataTables_length" id="example1_length">
-                            <b>{{ t('app', 'Show') }}
+                            {{ t('app', 'Show') }}
                                 <select name="per_page" class="form-control input-sm pagination-select">
                                     {% for per_page in app.params.per_pages %}
                                     <option value="{{ per_page}}"{{ app.request.get.per_page == per_page ? 'selected' }}>
@@ -16,13 +16,13 @@
                                     </option>
                                     {% endfor %}
                                 </select> {{ t('app', 'records') }}
-                            </b>
+
                         </div>
                     </div>
-                    <div class="col-sm-6">
-                        <div id="example1_filter" class="dataTables_filter">
+                    <div class="col-md-6 col-sm-6">
+                        <div id="example1_filter" class="dataTables_filter pull-right">
                             <label>{{ t('app', 'Search') }}:
-                                <input type="search" name="q" class="form-control input-sm" placeholder="Найти" value="{{ app.request.get.q }}">
+                                <input type="search" name="q" class="form-control input-sm" placeholder="..." value="{{ app.request.get.q }}">
                             </label>
                         </div>
                     </div>
@@ -50,15 +50,20 @@
                                     aria-label="Engine version: activate to sort column ascending">
                                     Status
                                 </th>
+                                <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1"
+                                    aria-label="Engine version: activate to sort column ascending">
+                                    {{ t('app', 'Actions') }}
+                                </th>
                             </tr>
                             </thead>
                             <tbody>
                             {% for user in users %}
-                            <tr role="row" class="odd">
-                                <td class="sorting_1">{{ user.id }}</td>
+                            <tr>
+                                <td>{{ user.id }}</td>
                                 <td>{{ user.email }}</td>
                                 <td>{{ user.username }}</td>
                                 <td>{{ user.status }}</td>
+                                <td><button class="btn-danger btn-xs"><i class="fa fa-remove"></i></button></td>
                             </tr>
                             {% endfor %}
                             </tbody>
@@ -67,15 +72,15 @@
                 </div>
                 <div class="row">
                     <div class="col-sm-5">
-                        <div class="dataTables_info" id="example1_info" role="status" aria-live="polite">
-                            {{ t('app', 'Showing') }} {{ users.from}} - {{ users.to }}
-                            {{ t('app', 'of') }} {{ users.pagination.totalCount }} {{ t('app', 'records') }}
+                        <div class="dataTables_info" role="status" aria-live="polite">
+                            {{ t('app', 'Showing') }} {{ app.view.params.itemFrom}} - {{ app.view.params.itemTo }}
+                            {{ t('app', 'of') }} {{ app.view.params.totalCount }} {{ t('app', 'records') }}
                         </div>
                     </div>
                     <div class="col-sm-7">
-                        <div class="dataTables_paginate paging_simple_numbers" id="example1_paginate">
+                        <div class="dataTables_paginate paging_simple_numbers pull-right">
                                 {{ use('/yii/widgets') }}
-                                {{ link_pager_widget({ 'pagination': users.pagination }) }}
+                                {{ link_pager_widget({ 'pagination': app.view.params.pagination }) }}
                         </div>
                     </div>
                 </div>

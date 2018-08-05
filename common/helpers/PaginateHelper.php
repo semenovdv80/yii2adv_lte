@@ -1,6 +1,7 @@
 <?php
 namespace common\helpers;
 
+use Yii;
 use yii\data\Pagination;
 
 class PaginateHelper
@@ -12,7 +13,8 @@ class PaginateHelper
      */
     public static function paginate($query, $request)
     {
-        $pagination = new Pagination(['totalCount' => $query->count()]);
+        $totalCount = $query->count();
+        $pagination = new Pagination(['totalCount' => $totalCount]);
         $pagination->pageSizeParam = 'per_page';
         $pagination->pageSize = $request['per_page'] ?? 25;
 
@@ -20,10 +22,10 @@ class PaginateHelper
             ->limit($pagination->limit)
             ->all();
 
-        $records['pagination'] = $pagination;
-
-        $records['from'] = $pagination->offset +1;
-        $records['to'] = $pagination->page +1 < $pagination->pageCount ?
+        Yii::$app->view->params['pagination'] = $pagination;
+        Yii::$app->view->params['totalCount'] = $query->count();
+        Yii::$app->view->params['itemFrom'] = $pagination->offset +1;
+        Yii::$app->view->params['itemTo'] = $pagination->page +1 < $pagination->pageCount ?
             $pagination->offset +$pagination->pageSize :
             $pagination->totalCount;
 
