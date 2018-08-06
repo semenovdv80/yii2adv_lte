@@ -48,15 +48,17 @@ class UserController extends Controller
     public function actionList()
     {
         $pageTitle = Yii::t('app', 'List of users');
-        Yii::$app->view->params['pageTitle'] = $pageTitle;
 
-        $breadcrumbs[] = ['label' => Yii::t('app', 'Admin panel'), 'url' => ['/admin']];
-        $breadcrumbs[] = ['label' => $pageTitle, 'url' => ['/admin/user/list'], 'class' => 'active'];
+        $breadcrumbs = [
+            ['url' => ['/admin'], 'label' => Yii::t('app', 'Admin panel'), ],
+            ['url' => ['/admin/user/list'], 'label' => $pageTitle,  'class' => 'active']
+        ];
 
         $users = User::getList();
 
         return $this->render('/admin/user/list.twig', [
             'breadcrumbs' => $breadcrumbs,
+            'pageTitle' => $pageTitle,
             'users' => $users
         ]);
     }
@@ -69,10 +71,11 @@ class UserController extends Controller
     public function actionAdd()
     {
         $pageTitle = Yii::t('app', 'Adding user');
-        Yii::$app->view->params['pageTitle'] = $pageTitle;
 
-        $breadcrumbs[] = ['label' => Yii::t('app', 'Admin panel'), 'url' => ['/admin']];
-        $breadcrumbs[] = ['label' => $pageTitle, 'url' => ['/admin/user/add'], 'class' => 'active'];
+        $breadcrumbs = [
+            ['url' => ['/admin'], 'label' => Yii::t('app', 'Admin panel'), ],
+            ['label' => $pageTitle, 'url' => ['/admin/user/add'], 'class' => 'active']
+        ];
 
         $model = new AddUserForm();
         if ($model->load(Yii::$app->request->post())) {
@@ -83,6 +86,7 @@ class UserController extends Controller
 
         return $this->render('/admin/user/add.twig', [
             'breadcrumbs' => $breadcrumbs,
+            'pageTitle' => $pageTitle,
             'model' => $model,
         ]);
     }

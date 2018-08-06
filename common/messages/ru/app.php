@@ -4,6 +4,8 @@ return [
     'Add user' => 'Добавить пользователя',
     'Adding user' => 'Добавление пользователя',
     'Admin panel' => 'Админ панель',
+    'All categories' => 'Все категории',
+    'Categories' => 'Категории',
     'List of users' => 'Список пользователей',
     'of' => 'из',
     'Password' => 'Пароль',

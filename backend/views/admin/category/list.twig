@@ -1,0 +1,192 @@
+{% extends '/admin/layout/main.twig' %}
+
+{% block stylesheets %}
+    <link href="{{path('jstree/dist/themes/default/style.css')}}" rel='stylesheet'>
+{% endblock %}
+
+{% block content %}
+    <div class="box box-primary">
+        <!-- /.box-header -->
+        <div class="box-body">
+            <div id="example1_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div id="category_tree"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.box-body -->
+    </div>
+{% endblock %}
+
+{% block page_scripts %}
+    <script src="{{path('/js/jstree.js')}}"></script>
+    <script>
+        var tree =  $('#category_tree');
+        //show categories tree
+        tree.jstree({
+            'core': {
+                "check_callback": true, // enable all modifications
+                "themes": { "url": true, "name": 'default'},
+                'data': {
+                    "url" : '/admin/category/gettree',
+                    "data" : function (node) {
+                        return { "id" : node.id };
+                    }
+                }
+            },
+            "types" : {
+                "#" : {
+                    "max_children" : -1, //unlimit
+                    "max_depth" : 6,
+                    "valid_children" : ["root"]
+                },
+                "root" : {
+                    "icon" : "/static/3.3.5/assets/images/tree_icon.png1",
+                    "valid_children" : ["default"]
+                },
+                "default" : {
+                    "valid_children" : ["default","file"]
+                },
+                "file" : {
+                    "icon" : "glyphicon glyphicon-file",
+                    "valid_children" : []
+                }
+            },
+            'plugins': ['dnd', 'sort', 'contextmenu', 'state', 'themes', 'types'],
+            "contextmenu":{
+                "items": function($node) {
+                    return {
+                        "Create": {
+                            "separator_before": false,
+                            "separator_after": false,
+                            "label": "Добавить",
+                            "action": function (obj) {
+                                tree.jstree('create_node', $node, {text : "Новая категория"}, 'last' , function(new_node){
+                                    //set parent id from node that saved to db (instead "j_" we get id from db)
+                                    var parent_id = tree.jstree(true).get_parent(new_node.id);
+                                    var parent_node = tree.jstree(true).get_node(parent_id);
+                                    $.ajax({
+                                        url: '/admin/category/add',
+                                        type: 'POST',
+                                        data: {'text': new_node.text, 'parent_id': parent_node.original.id},
+                                        dataType: 'json',
+                                        success: function (id) {
+                                            //assign saved id to node (instead "j_" we set id from db)
+                                            new_node.original.id = id;
+                                            //rename node
+                                            tree.jstree("edit", new_node);
+                                        }
+                                    });
+                                });
+                            }
+                        },
+                        "Rename": {
+                            "separator_before": false,
+                            "separator_after": false,
+                            "label": "Изменить",
+                            "action": function (obj) {
+                                tree.jstree('edit', $node);
+                            }
+                        },
+                        "Remove": {
+                            "separator_before": false,
+                            "separator_after": false,
+                            "label": "Удалить",
+                            "action": function (obj) {
+                                var modal = $('#deleteModal');
+                                var form = $('#form_delete');
+                                modal.modal('show');
+                                form.submit(function( event ) {
+                                    event.preventDefault();
+                                    tree.jstree('delete_node', $node);
+                                    modal.modal('hide');
+                                });
+                            }
+                        }
+                    };
+                }
+            }
+        });
+        //rename category
+        tree.bind("rename_node.jstree", function (e, data) {
+            var id = data.node.original.id;
+            var text = data.node.text;
+            $.ajax({
+                url: '/admin/category/edit',
+                type: 'POST',
+                data: {'id': id, 'text': text},
+                success: function (data) {
+                    console.log('изменено')
+                }
+            });
+        });
+        //delete node
+        tree.bind("delete_node.jstree", function (e, data) {
+            var id = data.node.original.id;
+            var text = data.node.text;
+            //refuse if it's root
+            if (id ==1) {
+                noty_message('error', 'top', 'Запрет удаления категории "'+text+'"' , 1000, true);
+                return;
+            }
+            $.ajax({
+                url: '/admin/category/delete',
+                type: 'POST',
+                data: {
+                    'item_id': id,
+                    'token': $('#form_delete input[name=token]').val()
+                },
+                dataType: 'json',
+                success: function (data) {
+                    if (data == true) {
+                        noty_message('error', 'top', 'Категория "'+text+'" удалена!', 1000, false);
+                    } else {
+                        noty_message('error', 'top', 'Ошибка!', 1000, false);
+                    }
+                }
+            })
+        });
+        //move node by tree
+        tree.bind("move_node.jstree", function (e, data) {
+            if (data.parent == '#') {
+                noty_message('error', 'top', 'Невозможно разместить выше корневой папки!', 1000, true);
+            } else {
+                //get parent id from node that saved to db (instead "j_" we get id from db)
+                var parent_node = tree.jstree(true).get_node(data.parent);
+                $.ajax({
+                    url: '/admin/category/settree',
+                    headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+                    type: 'POST',
+                    data: {'node_id': data.node.original.id, 'parent_id': parent_node.original.id},
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data == false) {
+                            noty_message('error', 'top', 'Изменение недоступно!', 1000, true);
+                        } else if (data == true) {
+                            noty_message('success', 'top', 'Изменение сохранено', 1000, false);
+                        } else {
+                            noty_message('error', 'top', 'Ошибка!', 1000, true);
+                        }
+                    }
+                });
+            }
+        });
+        //notification message
+        function noty_message(type, layout, text, timeout, reload) {
+            new Noty({
+                type: type,
+                layout: layout,
+                theme: 'metroui',
+                text: '<div class="text-center">'+text+'</div>',
+                timeout: timeout,
+                callbacks: {
+                    afterClose: function () {
+                        if (reload == true) {location.reload()}
+                    }
+                }
+            }).show();
+        }
+    </script>
+{% endblock %}
