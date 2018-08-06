@@ -1,6 +1,7 @@
 <?php
 namespace backend\controllers;
 
+use common\models\Category;
 use common\models\User;
 use backend\models\AddUserForm;
 use Yii;
@@ -58,5 +59,15 @@ class CategoryController extends Controller
             'breadcrumbs' => $breadcrumbs,
             'pageTitle' => $pageTitle,
         ]);
+    }
+
+    public function actionGettree()
+    {
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+
+        $node11 = Category::findOne(['text' => 'All categories']);
+        $descendants = $node11->getDescendants(2, true)->all();  // via relation
+
+        return $descendants;
     }
 }

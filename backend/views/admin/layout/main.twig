@@ -19,6 +19,14 @@
     <link rel="stylesheet" href="{{ path('/css/adminlte/skins/_all-skins.min.css') }}">
     <!-- Custom css -->
     <link rel="stylesheet" href="{{ path('/css/admin.css') }}">
+
+    <!-- notification plugin -->
+    <link href="{{path('/css/noty/noty.css')}}" rel='stylesheet'>
+    <link href="{{path('/css/noty/noty_theme_default.css')}}" rel='stylesheet'>
+
+    <!-- block with styles from page -->
+    {% block page_styles %}{% endblock %}
+
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -141,5 +149,7 @@
 <script src="{{ path('/js/adminlte/adminlte.min.js')}}"></script>
 <!-- Admin custom js-->
 <script src="{{ path('/js/admin.js')}}"></script>
+<!-- Page scripts -->
+{% block page_scripts %}{% endblock %}
 </body>
 </html>
