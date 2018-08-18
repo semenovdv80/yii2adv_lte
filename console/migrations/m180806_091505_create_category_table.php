@@ -19,6 +19,7 @@ class m180806_091505_create_category_table extends Migration
             'rgt' => $this->integer()->notNull(),
             'depth' => $this->integer()->notNull(),
             'text' => $this->string()->notNull(),
+            'children' => $this->string(),
         ]);
     }
 

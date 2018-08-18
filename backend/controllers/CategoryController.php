@@ -61,13 +61,14 @@ class CategoryController extends Controller
         ]);
     }
 
+    /**
+     * Display whole tree hierarhy
+     *
+     * @return null|static
+     */
     public function actionGettree()
     {
         Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-
-        $node11 = Category::findOne(['text' => 'All categories']);
-        $descendants = $node11->getDescendants(2, true)->all();  // via relation
-
-        return $descendants;
+        return Category::find()->getTree();
     }
 }
