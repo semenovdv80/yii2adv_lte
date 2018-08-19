@@ -5,7 +5,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>AdminLTE 2 | Top Navigation</title>
     <!-- Tell the browser to be responsive to screen width -->
-    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <!-- CSRF-Token -->
+    <meta name="csrf-token" content="{{ app.request.csrfToken }}">
     <!-- Bootstrap 3.3.7 -->
     <link rel="stylesheet" href="{{ path('/css/bootstrap/bootstrap.min.css') }}">
     <!-- Font Awesome -->
@@ -145,6 +147,8 @@
 <script href="{{ path('/js/jquery-slimscroll/jquery.slimscroll.min.js')}}"></script>
 <!-- FastClick -->
 <script src="{{ path('/js/fastclick/fastclick.js')}}"></script>
+<!-- Noty -->
+<script src="{{ path('/js/noty/noty.js')}}"></script>
 <!-- AdminLTE App -->
 <script src="{{ path('/js/adminlte/adminlte.min.js')}}"></script>
 <!-- Admin custom js-->

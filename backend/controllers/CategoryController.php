@@ -71,4 +71,22 @@ class CategoryController extends Controller
         Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         return Category::find()->getTree();
     }
+
+    /**
+     * Move node on tree
+     * 
+     * @return bool
+     */
+    public function actionSettree()
+    {
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+
+        $params = Yii::$app->request->bodyParams;
+        if (!empty($params['node_id']) && !empty($params['parent_id'])) {
+            $node = Category::findOne($params['node_id']);
+            $parent = Category::findOne($params['parent_id']);
+            $node->appendTo($parent)->save(); // move existing node
+        }
+        return true;
+    }
 }
