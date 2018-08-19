@@ -74,7 +74,7 @@ class CategoryController extends Controller
 
     /**
      * Move node on tree
-     * 
+     *
      * @return bool
      */
     public function actionSettree()
@@ -87,6 +87,72 @@ class CategoryController extends Controller
             $parent = Category::findOne($params['parent_id']);
             $node->appendTo($parent)->save(); // move existing node
         }
+        return true;
+    }
+
+    /**
+     * Add node
+     *
+     * @return mixed
+     */
+    public function actionAdd()
+    {
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+
+        $parentId = Yii::$app->request->post('parent_id');
+        $nodeText = Yii::$app->request->post('text');
+
+        if (!empty($parentId)) {
+            $parent = Category::findOne($parentId);
+            $node = new Category();
+            $node->text = $nodeText;
+            $node->appendTo($parent)->save();
+            return $node->id;
+        }
+    }
+
+    /**
+     * Rename node
+     *
+     * @return bool
+     */
+    public function actionEdit()
+    {
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+
+        $nodeId = Yii::$app->request->post('id');
+        $nodeText = Yii::$app->request->post('text');
+
+        if (!empty($nodeId)) {
+            $node = Category::findOne($nodeId);
+            $node->text = $nodeText;
+            $node->save();
+        }
+        return true;
+    }
+
+    /**
+     * Node delete
+     *
+     * @return bool
+     * @throws \Exception
+     * @throws \Throwable
+     */
+    public function actionDelete()
+    {
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+
+        $nodeId = Yii::$app->request->post('item_id');
+
+        if (!empty($nodeId)) {
+            $node = Category::findOne($nodeId);
+        }
+
+        if (empty($node)) {
+            return false;
+        }
+
+        $node->delete();
         return true;
     }
 }

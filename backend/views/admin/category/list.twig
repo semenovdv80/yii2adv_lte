@@ -69,6 +69,7 @@
                                     var parent_node = tree.jstree(true).get_node(parent_id);
                                     $.ajax({
                                         url: '/admin/category/add',
+                                        headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
                                         type: 'POST',
                                         data: {'text': new_node.text, 'parent_id': parent_node.original.id},
                                         dataType: 'json',
@@ -115,10 +116,11 @@
             var text = data.node.text;
             $.ajax({
                 url: '/admin/category/edit',
+                headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
                 type: 'POST',
                 data: {'id': id, 'text': text},
                 success: function (data) {
-                    console.log('изменено')
+                    noty_message('success', 'top', 'Изменение сохранено', 1000, false);
                 }
             });
         });
@@ -133,6 +135,7 @@
             }
             $.ajax({
                 url: '/admin/category/delete',
+                headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
                 type: 'POST',
                 data: {
                     'item_id': id,

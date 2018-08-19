@@ -1,0 +1,27 @@
+<!-- Modal delete -->
+<div id = deleteModal class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">×</button>
+                <h4>Удаление записи</h4>
+            </div>
+            <div class="modal-body">
+                <h5 class="alert alert-danger text-center">Данное действие не обратимо! Вы подтверждаете данное действие?</h5>
+            </div>
+            <div class="modal-footer">
+                <form id="form_delete" class="multiple-form" accept-charset="UTF-8" action="" method="POST">
+                    <input type="hidden" name="token" value="{{ app.request.csrfToken }}">
+                    <input type="hidden" name="item_id" value="">
+                    <input type="hidden" name="redirect_to" value="{{ app.request.uri }}">
+                    <div class="col-md-12">
+                        <input class="btn btn-danger pull-left" type="submit" value="Удалить">
+                        <input class="btn btn-default pull-right" type="button"  data-dismiss="modal" value="Отмена">
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
