@@ -5,11 +5,7 @@ use common\helpers\PaginateHelper;
 use Yii;
 use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
-use yii\data\Pagination;
-use yii\db\ActiveRecord;
-use yii\db\Query;
-use yii\db\TableSchema;
-use yii\helpers\VarDumper;
+use yii\mongodb\ActiveRecord;
 use yii\web\IdentityInterface;
 
 /**
@@ -30,6 +26,26 @@ class User extends ActiveRecord implements IdentityInterface
 {
     const STATUS_DELETED = 0;
     const STATUS_ACTIVE = 10;
+
+    /**
+     * Collection name
+     *
+     * @return array|string
+     */
+    public static function collectionName()
+    {
+        return 'user';
+    }
+
+    /**
+     * MOdel attributes
+     *
+     * @return array list of attribute names.
+     */
+    public function attributes()
+    {
+        return ['_id', 'username', 'auth_key', 'password_hash', 'email', 'password_reset_token', 'status', 'created_at', 'updated_at'];
+    }
 
 
     /**
@@ -66,7 +82,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public static function findIdentity($id)
     {
-        return static::findOne(['id' => $id, 'status' => self::STATUS_ACTIVE]);
+        return static::findOne(['_id' => $id, 'status' => self::STATUS_ACTIVE]);
     }
 
     /**
@@ -128,7 +144,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function getId()
     {
-        return $this->getPrimaryKey();
+        return (string) $this->getPrimaryKey();
     }
 
     /**
@@ -161,7 +177,8 @@ class User extends ActiveRecord implements IdentityInterface
     /**
      * Generates password hash from password and sets it to the model
      *
-     * @param string $password
+     * @param $password
+     * @throws \yii\base\Exception
      */
     public function setPassword($password)
     {

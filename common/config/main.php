@@ -9,7 +9,7 @@ return [
     'vendorPath' => dirname(dirname(__DIR__)) . '/vendor',
     'components' => [
         'authManager' => [
-            'class' => 'yii\rbac\DbManager',
+            'class' => 'yii\mongodb\rbac\MongoDbManager',
         ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
@@ -41,6 +41,12 @@ return [
                     'basePath' => '@common/messages',
                 ],
             ],
+        ],
+        'gearman' => [
+            'class' => 'ext.Gearman',
+            'servers' => array(
+                array('host' => '127.0.0.1', 'port' => 4730),
+            ),
         ],
     ],
 ];

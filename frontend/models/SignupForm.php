@@ -1,6 +1,7 @@
 <?php
 namespace frontend\models;
 
+use common\helpers\MongoHelper;
 use yii\base\Model;
 use common\models\User;
 
@@ -48,6 +49,7 @@ class SignupForm extends Model
         }
         
         $user = new User();
+        $user->_id = MongoHelper::autoInc('user_id');
         $user->username = $this->username;
         $user->email = $this->email;
         $user->setPassword($this->password);
