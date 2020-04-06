@@ -44,16 +44,31 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function attributes()
     {
-        return ['_id', 'username', 'auth_key', 'password_hash', 'email', 'password_reset_token', 'status', 'created_at', 'updated_at'];
+        return [
+            '_id',
+            'username',
+            'auth_key',
+            'password_hash',
+            'email',
+            'password_reset_token',
+            'access_token',
+            'status',
+            'created_at',
+            'updated_at'
+        ];
     }
 
-
     /**
-     * {@inheritdoc}
+     * Return only selected fields
+     *
+     * @return array|false
      */
-    public static function tableName()
+    public function fields()
     {
-        return '{{%user}}';
+        $fields = parent::fields();
+        unset($fields['password_hash'], $fields['access_token'],$fields['auth_key']);
+
+        return $fields;
     }
 
     /**
@@ -90,7 +105,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public static function findIdentityByAccessToken($token, $type = null)
     {
-        throw new NotSupportedException('"findIdentityByAccessToken" is not implemented.');
+        return static::findOne(['access_token' => $token]);
     }
 
     /**
@@ -231,6 +246,24 @@ class User extends ActiveRecord implements IdentityInterface
     public function removePasswordResetToken()
     {
         $this->password_reset_token = null;
+    }
+
+    /**
+     * Generate new access_token
+     *
+     * @param bool $insert
+     * @return bool
+     * @throws \yii\base\Exception
+     */
+    public function beforeSave($insert)
+    {
+        if (parent::beforeSave($insert)) {
+            if ($this->isNewRecord) {
+                $this->access_token = \Yii::$app->security->generateRandomString();
+            }
+            return true;
+        }
+        return false;
     }
 
     /**
