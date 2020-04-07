@@ -46,11 +46,24 @@
             </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li class="{{ app.controller.action.id == 'list' ? 'active' : ''}}">
-                        <a href="{{ path(['admin/user/list']) }}"><i class="fa fa-circle-o"></i> {{ t('app', 'List of users') }}</a>
+                    <li class="{{ app.controller.action.id == 'index' ? 'active' : ''}}">
+                        <a href="{{ path(['admin/users']) }}"><i class="fa fa-circle-o"></i> {{ t('app', 'List of users') }}</a>
                     </li>
-                    <li class="{{ app.controller.action.id == 'add' ? 'active' : ''}}">
-                        <a href="{{ path(['admin/user/add']) }}"><i class="fa fa-circle-o"></i> {{ t('app', 'Add user') }}</a></li>
+                    <li class="{{ app.controller.action.id == 'create' ? 'active' : ''}}">
+                        <a href="{{ path(['admin/users/create']) }}"><i class="fa fa-circle-o"></i> {{ t('app', 'Add user') }}</a></li>
+                </ul>
+            </li>
+            <li class="treeview {{ app.controller.id == 'user' ? 'active' : ''}}">
+                <a href="#">
+                    <i class="fa fa-users"></i> <span>{{ t('app', 'Roles') }}</span>
+                    <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li class="{{ app.controller.action.id == 'list' ? 'active' : ''}}">
+                        <a href="{{ path(['admin/role/list']) }}"><i class="fa fa-circle-o"></i> {{ t('app', 'List of roles') }}</a>
+                    </li>
                 </ul>
             </li>
             <li class="treeview">

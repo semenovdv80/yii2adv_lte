@@ -46,7 +46,7 @@ class UserController extends Controller
      *
      * @return string
      */
-    public function actionList()
+    public function actionIndex()
     {
         $request = Yii::$app->request;
 
@@ -75,11 +75,35 @@ class UserController extends Controller
     }
 
     /**
-     * Add new user
+     * View user's data
      *
      * @return string
      */
-    public function actionAdd()
+    public function actionView()
+    {
+        $userId = Yii::$app->request->get('id');
+        $user = User::findOne($userId);
+
+        $pageTitle = Yii::t('app', 'User info');
+
+        $breadcrumbs = [
+            ['url' => ['/admin'], 'label' => Yii::t('app', 'Admin panel'), ],
+            ['label' => $pageTitle, 'url' => ['/admin/user/'.$userId], 'class' => 'active']
+        ];
+
+        return $this->render('/admin/user/view.twig', [
+            'breadcrumbs' => $breadcrumbs,
+            'pageTitle' => $pageTitle,
+            'model' => $user,
+        ]);
+    }
+
+    /**
+     * Create new user
+     *
+     * @return string
+     */
+    public function actionCreate()
     {
         $pageTitle = Yii::t('app', 'Adding user');
 
@@ -91,7 +115,7 @@ class UserController extends Controller
         $model = new AddUserForm();
         if ($model->load(Yii::$app->request->post())) {
             if ($model->addUser()) {
-                return $this->redirect(['/admin/user/list']);
+                return $this->redirect(['/admin/users']);
             }
         }
 

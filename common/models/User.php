@@ -159,9 +159,20 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
+     * Don't show even hash
+     *
+     * @return string
+     */
+    public function getPassword()
+    {
+        return '';
+    }
+
+    /**
      * Generates password hash from password and sets it to the model
      *
-     * @param string $password
+     * @param $password
+     * @throws \yii\base\Exception
      */
     public function setPassword($password)
     {
@@ -201,10 +212,6 @@ class User extends ActiveRecord implements IdentityInterface
     public static function getList($params)
     {
         $query = self::find();
-
-        $query->filterWhere([
-            'email' => 'admin@admin.com',
-        ]);
 
         if (!empty($params['q'])) {
             $query->andFilterWhere(['or',

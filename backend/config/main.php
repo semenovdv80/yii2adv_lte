@@ -17,7 +17,16 @@ return [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
-                'admin/<controller:(\w|-)+>/<action:(\w|-)+>' => '<controller>/<action>',
+                //'admin/<controller:(\w|-)+>/<action:(\w|-)+>' => '<controller>/<action>',
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => ['user'],
+                    'prefix' => 'admin',
+                    'extraPatterns' => [
+                        'GET create' => 'create',
+                    ],
+                ],
+
             ],
         ],
         'request' => [
