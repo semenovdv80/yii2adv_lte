@@ -1,14 +1,14 @@
 <?php
+
 namespace common\models;
 
 use common\helpers\PaginateHelper;
 use Yii;
 use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
+use yii\data\ActiveDataProvider;
 use yii\data\Pagination;
 use yii\db\ActiveRecord;
-use yii\db\Query;
-use yii\db\TableSchema;
 use yii\helpers\VarDumper;
 use yii\web\IdentityInterface;
 
@@ -118,7 +118,7 @@ class User extends ActiveRecord implements IdentityInterface
             return false;
         }
 
-        $timestamp = (int) substr($token, strrpos($token, '_') + 1);
+        $timestamp = (int)substr($token, strrpos($token, '_') + 1);
         $expire = Yii::$app->params['user.passwordResetTokenExpire'];
         return $timestamp + $expire >= time();
     }
@@ -194,44 +194,45 @@ class User extends ActiveRecord implements IdentityInterface
 
     /**
      * List of users
-     * @return mixed
+     *
+     * @param $params
+     * @return array
      */
-    public static function getList()
+    public static function getList($params)
     {
-        $request = Yii::$app->request->get();
-        $orderCol = Yii::$app->view->params['orderCol'] = self::orderColumn();
-        $orderType = Yii::$app->view->params['orderType'] = $_COOKIE['orderType'] ?? 'desc';
-
         $query = self::find();
 
-        /*
-        $filterBy = [];
-        if (!empty($request['id'])) {
-            $filterBy['id'] = $request['id'];
-        }
-        if (!empty($request['username'])) {
-            $filterBy['username'] = $request['username'];
-        }
-        $query->filterWhere($filterBy);
-        */
+        $query->filterWhere([
+            'email' => 'admin@admin.com',
+        ]);
 
-        if (!empty($request['q'])) {
-            $query->where(['like', 'id', $request['q']])
-                ->orWhere(['like', 'username', $request['q']]);
+        if (!empty($params['q'])) {
+            $query->andFilterWhere(['or',
+                ['like','id', $params['q']],
+                ['like','username',$params['q']]]);
         }
 
-        $query->orderBy("$orderCol $orderType");
+        $query->orderBy([
+            $params['orderCol'] => ($params['orderDir'] == 'desc') ? SORT_DESC : SORT_ASC
+        ]);
 
-        $records  = PaginateHelper::paginate($query, $request);
+        //die(var_dump($query->createCommand()->getRawSql()));
 
-        return $records;
-    }
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+            'pagination' => [
+                'pageSize' => $params['perPage'],
+                'pageSizeParam' => 'perPage',
+            ],
+        ]);
 
-    public static function orderColumn()
-    {
-        $aColumns = self::attributes();
-        $orderCol = $_COOKIE['orderCol'] ?? 'id';
-        $orderCol = in_array($orderCol, $aColumns) ? $orderCol : 'id';
-        return $orderCol;
+        $models = $dataProvider->getModels();
+
+        $pages = PaginateHelper::extend($dataProvider->pagination, $params);
+
+        return [
+            'models' => $models,
+            'pages' => $pages
+        ];
     }
 }

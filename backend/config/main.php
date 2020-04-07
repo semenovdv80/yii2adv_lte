@@ -32,6 +32,13 @@ return [
             // this is the name of the session cookie used for login on the backend
             'name' => 'advanced-backend',
         ],
+//        'queue' => [
+//            'class' => \yii\queue\db\Queue::class,
+//            'db' => 'db', // Компонент подключения к БД или его конфиг
+//            'tableName' => '{{%queue}}', // Имя таблицы
+//            'channel' => 'default', // Выбранный для очереди канал
+//            'mutex' => \yii\mutex\MysqlMutex::class, // Мьютекс для синхронизации запросов
+//        ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
             'targets' => [

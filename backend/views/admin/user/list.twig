@@ -5,14 +5,16 @@
         <div class="box-body">
             <div id="example1_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
                 <div class="row">
-                    <form>
+                    <form id="filterForm">
                     <div class="col-md-6 col-sm-6">
                         <div class="dataTables_length" id="example1_length">
+                            <input type="hidden" name="orderCol" value="{{ params.orderCol }}">
+                            <input type="hidden" name="orderDir" value="{{ params.orderDir }}">
                             {{ t('app', 'Show') }}
-                                <select name="per_page" class="form-control input-sm pagination-select">
-                                    {% for per_page in app.params.per_pages %}
-                                    <option value="{{ per_page}}"{{ app.request.get.per_page == per_page ? 'selected' }}>
-                                        {{ per_page}}
+                                <select name="perPage" class="form-control input-sm pagination-select">
+                                    {% for perPage in app.params.per_pages %}
+                                    <option value="{{ perPage}}"{{ app.request.get.perPage == perPage ? 'selected' }}>
+                                        {{ perPage}}
                                     </option>
                                     {% endfor %}
                                 </select> {{ t('app', 'records') }}
@@ -34,15 +36,15 @@
                                aria-describedby="example1_info">
                             <thead>
                             <tr role="row">
-                                <th class="order_{{ app.view.params['orderCol']=='id' ? app.view.params['orderType'] : '' }}"
+                                <th class="order_{{ params['orderCol'] =='id' ? params['orderDir'] : '' }}"
                                     data-col="id">
-                                    ID
+                                    ID{{ app.params['orderCol'] }}
                                 </th>
-                                <th class="order_{{ app.view.params['orderCol']=='email' ? app.view.params['orderType'] : '' }}"
+                                <th class="order_{{ params['orderCol'] =='email' ? params['orderDir'] : '' }}"
                                     data-col="email">
                                     E-mail
                                 </th>
-                                <th class="order_{{ app.view.params['orderCol']=='username' ? app.view.params['orderType'] : '' }}"
+                                <th class="order_{{ params['orderCol'] =='username' ? params['orderDir'] : '' }}"
                                     data-col="username">
                                     Username
                                 </th>
@@ -73,14 +75,14 @@
                 <div class="row">
                     <div class="col-sm-5">
                         <div class="dataTables_info" role="status" aria-live="polite">
-                            {{ t('app', 'Showing') }} {{ app.view.params.itemFrom}} - {{ app.view.params.itemTo }}
-                            {{ t('app', 'of') }} {{ app.view.params.totalCount }} {{ t('app', 'records') }}
+                            {{ t('app', 'Showing') }} {{ pages.fromItem}} - {{ pages.toItem }}
+                            {{ t('app', 'of') }} {{ pages.pagination.totalCount }} {{ t('app', 'records') }}
                         </div>
                     </div>
                     <div class="col-sm-7">
                         <div class="dataTables_paginate paging_simple_numbers pull-right">
                                 {{ use('/yii/widgets') }}
-                                {{ link_pager_widget({ 'pagination': app.view.params.pagination }) }}
+                                {{ link_pager_widget({ 'pagination': pages.pagination }) }}
                         </div>
                     </div>
                 </div>

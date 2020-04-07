@@ -1,34 +1,26 @@
 <?php
 namespace common\helpers;
 
-use Yii;
-use yii\data\Pagination;
-
 class PaginateHelper
 {
     /**
-     * @param $query
-     * @param $request
-     * @return mixed
+     * Paginator extension
+     *
+     * @param $pagination
+     * @param $params
+     * @return array
      */
-    public static function paginate($query, $request)
+    public static function extend($pagination, $params)
     {
-        $totalCount = $query->count();
-        $pagination = new Pagination(['totalCount' => $totalCount]);
-        $pagination->pageSizeParam = 'per_page';
-        $pagination->pageSize = $request['per_page'] ?? 25;
+        $pagination->params['orderCol'] = $params['orderCol'];
+        $pagination->params['orderDir'] = $params['orderDir'];
 
-        $records = $query->offset($pagination->offset)
-            ->limit($pagination->limit)
-            ->all();
-
-        Yii::$app->view->params['pagination'] = $pagination;
-        Yii::$app->view->params['totalCount'] = $query->count();
-        Yii::$app->view->params['itemFrom'] = $pagination->offset +1;
-        Yii::$app->view->params['itemTo'] = $pagination->page +1 < $pagination->pageCount ?
-            $pagination->offset +$pagination->pageSize :
-            $pagination->totalCount;
-
-        return $records;
+        return [
+            'pagination' => $pagination,
+            'fromItem' => !empty($pagination->totalCount) ? $pagination->offset + 1 : 0,
+            'toItem' => ($pagination->page + 1 < $pagination->pageCount) ?
+                $pagination->offset + $pagination->pageSize :
+                $pagination->totalCount
+            ];
     }
 }

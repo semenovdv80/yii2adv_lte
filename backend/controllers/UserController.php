@@ -5,6 +5,7 @@ use common\models\User;
 use backend\models\AddUserForm;
 use Yii;
 use yii\filters\AccessControl;
+use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 
 class UserController extends Controller
@@ -47,6 +48,14 @@ class UserController extends Controller
      */
     public function actionList()
     {
+        $request = Yii::$app->request;
+
+        $params = ArrayHelper::merge($request->get(), [
+            'perPage' => $request->get('perPage', Yii::$app->params['per_pages'][0]),
+            'orderCol' => $request->get('orderCol', 'id'),
+            'orderDir' => $request->get('orderDir', 'asc')
+        ]);
+
         $pageTitle = Yii::t('app', 'List of users');
 
         $breadcrumbs = [
@@ -54,12 +63,14 @@ class UserController extends Controller
             ['url' => ['/admin/user/list'], 'label' => $pageTitle,  'class' => 'active']
         ];
 
-        $users = User::getList();
+        $data = User::getList($params);
 
         return $this->render('/admin/user/list.twig', [
-            'breadcrumbs' => $breadcrumbs,
+            'params' => $params,
+            'pages' => $data['pages'],
+            'users' => $data['models'],
             'pageTitle' => $pageTitle,
-            'users' => $users
+            'breadcrumbs' => $breadcrumbs,
         ]);
     }
 

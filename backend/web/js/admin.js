@@ -6,6 +6,9 @@ $(function () {
     /*order by table's fields*/
 
     $('#itemsTable').on('click', 'th', function () {
+        var inputCol = $('input[name=orderCol]');
+        var inputDir = $('input[name=orderDir]');
+
         var column = $(this).data('col');
         console.log(column);
         if (column == undefined) {
@@ -13,16 +16,9 @@ $(function () {
         }
 
         var orderClass = $(this).attr('class');
-        var order = (orderClass == 'order_asc' || orderClass == 'order_') ? 'desc' : 'asc';
-
-        $.cookie("orderCol", column, {
-            expires: 10,
-            path: '/'
-        });
-        $.cookie("orderType", order, {
-            expires: 10,
-            path: '/'
-        });
-        location.reload();
+        var orderDir = (orderClass === 'order_asc' || orderClass === 'order_') ? 'desc' : 'asc';
+        inputCol.val(column);
+        inputDir.val(orderDir);
+        $('#filterForm').submit();
     });
 });
