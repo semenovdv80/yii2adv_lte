@@ -48,6 +48,9 @@
                                     data-col="username">
                                     Username
                                 </th>
+                                <th>
+                                    Roles
+                                </th>
                                 <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1"
                                     aria-label="Engine version: activate to sort column ascending">
                                     Status
@@ -64,6 +67,7 @@
                                 <td>{{ user.id }}</td>
                                 <td>{{ user.email }}</td>
                                 <td>{{ user.username }}</td>
+                                <td>{{ user.rolesList }}</td>
                                 <td>{{ user.status }}</td>
                                 <td><button class="btn-danger btn-xs"><i class="fa fa-remove"></i></button></td>
                             </tr>
