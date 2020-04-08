@@ -41,6 +41,8 @@
 </head>
 <!-- ADD THE CLASS layout-boxed TO GET A BOXED LAYOUT -->
 <body class="hold-transition skin-blue layout-boxed sidebar-mini">
+{{   void(this.beginBody()) }}
+
 <div class="wrapper-fluid">
 
     <header class="main-header">
@@ -158,5 +160,6 @@
 <script src="{{ path('/js/admin.js')}}"></script>
 <!-- Page scripts -->
 {% block page_scripts %}{% endblock %}
+{{   void(this.endBody()) }}
 </body>
 </html>

@@ -64,11 +64,11 @@ class User extends ActiveRecord implements IdentityInterface
     /**
      * Get assigned roles
      *
-     * @return \yii\rbac\Assignment[]
+     * @return \yii\rbac\Role[]
      */
     public function getRoles()
     {
-        return Yii::$app->authManager->getAssignments($this->id);
+        return Yii::$app->authManager->getRolesByUser($this->id);
     }
 
     /**
@@ -80,7 +80,7 @@ class User extends ActiveRecord implements IdentityInterface
     {
         $assignments = $this->roles ?? [];
         foreach($assignments as $role) {
-            $roles[] = $role->roleName;
+            $roles[] = $role->name;
         }
         return implode(',', $roles ?? []);
     }
