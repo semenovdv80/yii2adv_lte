@@ -3,10 +3,13 @@
 namespace backend\controllers;
 
 use backend\models\SendMailJob;
+use common\models\Sender;
 use common\models\User;
 use Yii;
 use common\models\Mail;
+use yii\behaviors\TimestampBehavior;
 use yii\data\ActiveDataProvider;
+use yii\db\ActiveRecord;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -52,9 +55,13 @@ class MailController extends Controller
     public function actionMassSend()
     {
         $userIds = User::find()->select('id')->column();
+        $sender = new Sender();
+        $sender->title = 'mass';
+        $sender->save();
+
         foreach ($userIds as $userId) {
             Yii::$app->queue->push(new SendMailJob([
-                'userId' => $userId,
+                'senderId' => $sender->id, 'userId' => $userId,
             ]));
         }
     }

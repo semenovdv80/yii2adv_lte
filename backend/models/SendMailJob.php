@@ -7,6 +7,7 @@ use yii\queue\JobInterface;
 
 class SendMailJob extends BaseObject implements JobInterface
 {
+    public $senderId;
     public $userId;
 
     public function execute($queue)
